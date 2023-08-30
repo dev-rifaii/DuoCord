@@ -1,0 +1,7 @@
+services:
+  dc-redis:
+    image: redis/redis-stack:latest
+    ports:
+      - "6379:6379"
+    environment:
+      REDIS_ARGS: "--requirepass test"
