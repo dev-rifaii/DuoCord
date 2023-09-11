@@ -3,7 +3,6 @@ package dev.rifaii.util;
 import dev.rifaii.activity.Activity;
 import dev.rifaii.user.User;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -23,7 +22,7 @@ public class UserFaker {
                 .setDiscordHandle("FakeHandle" + number)
                 .setDiscordId((long) number)
                 .setDiscordUsername("usernumber" + number)
-                .setEntryTime(Instant.now())
+//                .setEntryTime(OffsetDateTime.now())
                 .setDiscordAvatarUrl("https://i.pravatar.cc/300?u=" + Math.random() * 10)
                 .setDiscordName("Name" + number);
     }

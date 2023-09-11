@@ -6,22 +6,23 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.time.Instant;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
 @Accessors(chain = true)
 public class User {
 
     @NotNull
     private Long discordId;
-    @NotNull
+    @NotBlank
     private String discordName;
-    @NotNull
+    @NotBlank
     private String discordHandle;
-    @NotNull
+    @NotBlank
     private String discordUsername;
     @Min(value = 12, message = "Minimum age is 12")
     @Max(value = 120, message = "Maximum age is 120")
@@ -32,6 +33,6 @@ public class User {
     @NotNull
     private Activity activity;
     private List<String> labels;
-    private Instant entryTime;
+//    private OffsetDateTime entryTime;
 
 }

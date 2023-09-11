@@ -1,56 +1,78 @@
 package dev.rifaii.user;
 
 import dev.rifaii.activity.Activity;
-import dev.rifaii.util.UserFaker;
+import dev.rifaii.database.RedisClient;
+import redis.clients.jedis.search.IndexDefinition;
+import redis.clients.jedis.search.Query;
+import redis.clients.jedis.search.Schema;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class UserQueueDao {
 
-    private final List<User> enqueuedUsers = new ArrayList<>();
-    private final Map<Long, Set<Long>> userMatchHistory = new HashMap<>();
-    private final Map<Long, MatchSearchDto> searchSessions = new HashMap<>();
+    public static final String ENQUEUED_USER_KEY_PREFIX = "ENQUSR:";
+    public static final String USER_MATCH_HISTORY_KEY_PREFIX = "USRMTCHHIS:";
+    public static final String SEARCH_SESSION_KEY_PREFIX = "SRCHSES:";
+    public static final String IDX_ENQ_USR = "IDX:ENQUSR";
+    private final RedisClient redisClient = RedisClient.getInstance();
 
     public UserQueueDao() {
-        enqueuedUsers.addAll(UserFaker.generateFakeUsers(15));
+        indexFieldsToQuery();
     }
 
-    public void enqueueUser(User user) {
-        enqueuedUsers.add(user);
+    public void insertToQueue(User user) {
+        redisClient.insertJson(ENQUEUED_USER_KEY_PREFIX + user.getDiscordId(), user);
     }
 
-    public Optional<User> getMatchForUserByActivity(Long userId, Activity activity) {
-        return enqueuedUsers.stream()
-                .filter(match -> match.getActivity().name().equals(activity.name()))
-                .filter(match -> userMatchHistory.get(userId) == null || !userMatchHistory.get(userId).contains(match.getDiscordId()))
-                .findFirst();
+    public boolean isUserInQueue(Long userDiscordId) {
+        return redisClient.exists(ENQUEUED_USER_KEY_PREFIX + userDiscordId);
     }
 
-    public boolean isUserEnqueued(Long userDiscordId) {
-        return enqueuedUsers.stream()
-                .anyMatch(user -> user.getDiscordId().equals(userDiscordId));
+    public List<User> getEnqueuedUsersByAgeAndActivity(Short age, Activity activity) {
+        String ageRange = age < 18 ? "[-inf (18]" : "[18 +inf]";
+        var query = new Query("@\\$\\.activity:%s @\\$\\.age:%s".formatted(activity.name(), ageRange));
+        return redisClient.query(query, IDX_ENQ_USR, User.class);
     }
 
-    public void addMatchToUserHistory(Long userDiscordId, Long matchDiscordId) {
-        Optional.ofNullable(userMatchHistory.get(userDiscordId))
-                .ifPresentOrElse(
-                        existingHistory -> existingHistory.add(matchDiscordId),
-                        () -> {
-                            Set<Long> newHistory = new HashSet<>();
-                            newHistory.add(matchDiscordId);
-                            userMatchHistory.put(userDiscordId, newHistory);
-                        });
+    public void upsertMatch(Long userDiscordId, Long matchDiscordId) {
+        var userMatchHistory = redisClient.getJson(USER_MATCH_HISTORY_KEY_PREFIX + userDiscordId, ArrayList.class);
+
+        if (userMatchHistory == null) {
+            userMatchHistory = new ArrayList<Long>();
+        }
+
+        userMatchHistory.add(matchDiscordId);
+        redisClient.insertJson(USER_MATCH_HISTORY_KEY_PREFIX + userDiscordId, userMatchHistory);
     }
 
-    public void setSearchSession(Long userDiscordId, MatchSearchDto matchSearchDto) {
-        searchSessions.put(userDiscordId, matchSearchDto);
+    public List<Long> getMatchHistoryForUser(Long userDiscordId) {
+        return redisClient.getJsonList(USER_MATCH_HISTORY_KEY_PREFIX + userDiscordId, Long.class);
+
     }
 
-    public void deleteSearchHistory(Long userDiscordId) {
-        searchSessions.remove(userDiscordId);
+    public void insertSearchSession(MatchSearchDto matchSearchDto) {
+        redisClient.insertJson(SEARCH_SESSION_KEY_PREFIX + matchSearchDto.getUserDiscordId(), matchSearchDto);
+    }
+
+    public void deleteSession(Long userDiscordId) {
+        redisClient.deleteJson(SEARCH_SESSION_KEY_PREFIX + userDiscordId);
     }
 
     public Optional<MatchSearchDto> getUserSearchDto(Long userDiscordId) {
-        return Optional.of(searchSessions.get(userDiscordId));
+        return Optional.of(redisClient.getJson(SEARCH_SESSION_KEY_PREFIX + userDiscordId, MatchSearchDto.class));
+    }
+
+    private void indexFieldsToQuery() {
+        var schema = new Schema()
+                .addTextField("$.activity", 1.0)
+                .addNumericField("$.age");
+
+        var rule = new IndexDefinition(IndexDefinition.Type.JSON)
+                .setPrefixes(ENQUEUED_USER_KEY_PREFIX);
+        redisClient.createIndex(schema, rule, IDX_ENQ_USR);
     }
 }
+
+

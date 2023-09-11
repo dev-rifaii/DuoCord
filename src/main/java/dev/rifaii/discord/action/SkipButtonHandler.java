@@ -26,8 +26,7 @@ public class SkipButtonHandler implements ActionHandler {
         Optional<MatchSearchDto> existingMatchSearch = userQueueService.getUserSearchDto(userDiscordId);
 
         existingMatchSearch.ifPresentOrElse(matchSearchDto -> {
-                    var newMatch = userQueueService.getMatchForUserByActivity(userDiscordId, matchSearchDto.getActivity());
-
+                    var newMatch = userQueueService.findMatchForUser(matchSearchDto);
                     if (newMatch.isPresent()) {
                         displayNewMatch(event, newMatch.get());
                     } else {

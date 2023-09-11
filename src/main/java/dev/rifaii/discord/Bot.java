@@ -2,6 +2,7 @@ package dev.rifaii.discord;
 
 import dev.rifaii.discord.action.ActionListener;
 import dev.rifaii.discord.commands.SlashCommandsListener;
+import dev.rifaii.user.UserQueueDao;
 import dev.rifaii.user.UserQueueService;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -24,7 +25,7 @@ public class Bot {
 
     private static final String TOKEN = System.getenv("DISCORD_BOT_KEY");
 
-    private static final UserQueueService userQueueService = new UserQueueService();
+    private static final UserQueueService userQueueService = new UserQueueService(new UserQueueDao());
 
     public static void initialize() {
         JDA jda = JDABuilder.createDefault(TOKEN)

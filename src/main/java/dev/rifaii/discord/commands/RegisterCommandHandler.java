@@ -3,14 +3,10 @@ package dev.rifaii.discord.commands;
 import dev.rifaii.activity.Activity;
 import dev.rifaii.user.User;
 import dev.rifaii.user.UserQueueService;
-import jakarta.validation.Validation;
 import jakarta.validation.ValidationException;
-import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-
-import java.time.Instant;
 
 import static dev.rifaii.discord.commands.Command.REGISTER;
 import static dev.rifaii.discord.commands.Option.*;
@@ -22,8 +18,6 @@ import static java.lang.String.format;
 public class RegisterCommandHandler implements SlashCommandsHandler {
 
     private final UserQueueService userQueueService;
-
-    private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     @Override
     public void handle(SlashCommandInteractionEvent event) {
@@ -40,12 +34,12 @@ public class RegisterCommandHandler implements SlashCommandsHandler {
     }
 
     private void sendAlreadyRegisteredMessage(SlashCommandInteractionEvent event) {
-        event.reply("You are already in the queue").queue();
+        event.reply("You are already in the queue")
+             .queue();
     }
 
     private void validateAndRegisterUser(SlashCommandInteractionEvent event) {
         var user = commandInputToUser(event);
-        validateUser(user);
         userQueueService.enqueueUser(user);
         sendConfirmationMessage(event);
         log.info(format("User with ID %d has been registered", user.getDiscordId()));
@@ -53,8 +47,8 @@ public class RegisterCommandHandler implements SlashCommandsHandler {
 
     private void sendConfirmationMessage(SlashCommandInteractionEvent event) {
         event.reply("You have been added to the queue")
-                .setEphemeral(true)
-                .queue();
+             .setEphemeral(true)
+             .queue();
     }
 
     private User commandInputToUser(SlashCommandInteractionEvent event) {
@@ -69,7 +63,7 @@ public class RegisterCommandHandler implements SlashCommandsHandler {
                 .setActivity(activity)
                 .setAge(age)
                 .setAboutTheUser(text)
-                .setEntryTime(Instant.now())
+                //                .setEntryTime(OffsetDateTime.now())
                 .setDiscordAvatarUrl(avatarUrl)
                 .setDiscordHandle(userHandle)
                 .setDiscordUsername(username)
@@ -77,13 +71,10 @@ public class RegisterCommandHandler implements SlashCommandsHandler {
                 .setDiscordId(event.getUser().getIdLong());
     }
 
-    private void validateUser(User user) {
-        validator.validate(user);
-    }
-
     private void logErrorAndSendMessage(Exception e, SlashCommandInteractionEvent event) {
         log.error(e.getMessage());
-        event.reply(ERROR_MESSAGE_REPLY).queue();
+        event.reply(ERROR_MESSAGE_REPLY)
+             .queue();
     }
 
     @Override
