@@ -1,7 +1,6 @@
 package dev.rifaii.util;
 
-import static java.lang.Integer.parseInt;
-import static java.lang.System.getenv;
+import io.github.cdimascio.dotenv.Dotenv;
 
 public class PropertyLoader {
 
@@ -11,12 +10,13 @@ public class PropertyLoader {
     public static String REDIS_PASS;
 
     public static void loadVariables() throws Exception {
+        Dotenv dotenv = Dotenv.configure().load();
         Assert.requireNotNull(
                 "Failed to load system properties",
-                DISCORD_BOT_KEY = getenv("DISCORD_BOT_KEY"),
-                REDIS_HOST = getenv("REDIS_HOST"),
-                REDIS_PORT = parseInt(getenv("REDIS_PORT")),
-                REDIS_PASS = getenv("REDIS_PASS")
+                DISCORD_BOT_KEY = dotenv.get("DISCORD_BOT_KEY"),
+                REDIS_HOST = dotenv.get("REDIS_HOST"),
+                REDIS_PORT = Integer.parseInt(dotenv.get("REDIS_PORT")),
+                REDIS_PASS = dotenv.get("REDIS_PASS")
         );
     }
 

@@ -7,13 +7,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 
 import java.util.List;
 
 @Data
 @NoArgsConstructor
-@Accessors(chain = true)
 public class User {
 
     @NotNull
