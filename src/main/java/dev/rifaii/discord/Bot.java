@@ -20,10 +20,11 @@ import static dev.rifaii.activity.Activity.PLAYABLE_ACTIVITIES;
 import static dev.rifaii.discord.commands.Command.FIND;
 import static dev.rifaii.discord.commands.Command.REGISTER;
 import static dev.rifaii.discord.commands.Option.*;
+import static dev.rifaii.util.PropertyLoader.DISCORD_BOT_KEY;
 
 public class Bot {
 
-    private static final String TOKEN = System.getenv("DISCORD_BOT_KEY");
+    private static final String TOKEN = DISCORD_BOT_KEY;
 
     private static final UserQueueService userQueueService = new UserQueueService(new UserQueueDao());
 
