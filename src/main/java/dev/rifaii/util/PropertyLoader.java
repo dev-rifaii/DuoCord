@@ -11,6 +11,7 @@ public class PropertyLoader {
 
     public static void loadVariables() throws Exception {
         Dotenv dotenv = Dotenv.configure().load();
+        System.out.println(dotenv.get("DISCORD_BOT_KEY"));
         Assert.requireNotNull(
                 "Failed to load system properties",
                 DISCORD_BOT_KEY = dotenv.get("DISCORD_BOT_KEY"),
