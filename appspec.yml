@@ -1,0 +1,14 @@
+version: 0.0
+os: linux
+files:
+  - source: /DuoCord-0.1.jar
+    destination: /tmp
+hooks:
+  ApplicationStart:
+    - location: start_bot.sh
+      timeout: 300
+      runas: root
+  ApplicationStop:
+    - location: stop_bot.sh
+      timeout: 300
+      runas: root

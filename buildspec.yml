@@ -19,3 +19,7 @@ phases:
 artifacts:
   files:
     - build/libs/DuoCord-0.1.jar
+    - appspec.yml
+    - scripts/start-bot.sh
+    - scripts/stop-bot.sh
+  discard-paths: yes
