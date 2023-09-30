@@ -20,6 +20,6 @@ artifacts:
   files:
     - build/libs/DuoCord-0.1.jar
     - appspec.yml
-    - scripts/start-bot.sh
-    - scripts/stop-bot.sh
+    - scripts/start_bot.sh
+    - scripts/stop_bot.sh
   discard-paths: yes
