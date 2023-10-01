@@ -7,9 +7,12 @@ hooks:
   BeforeInstall:
     - location: setup_env.sh
       timeout: 300
+      runas: root
   ApplicationStart:
     - location: start_bot.sh
       timeout: 300
+      runas: root
   ApplicationStop:
     - location: stop_bot.sh
       timeout: 300
+      runas: root
