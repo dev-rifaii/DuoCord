@@ -4,6 +4,10 @@ files:
   - source: /DuoCord-0.1.jar
     destination: /tmp
 hooks:
+  BeforeInstall:
+    - location: setup_env.sh
+      timeout: 300
+      runas: root
   ApplicationStart:
     - location: start_bot.sh
       timeout: 300
