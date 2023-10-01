@@ -1,1 +1,1 @@
-pkill -q java && pkill java
+killall -9 java
