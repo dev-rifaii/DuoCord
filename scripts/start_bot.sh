@@ -1,4 +1,7 @@
 whoami
+pwd
+cat /root/.bashrc
+echo "--------------------------------------------------------------------------------"
 source /root/.bashrc
 echo "$REDIS_PORT"
 
