@@ -7,4 +7,4 @@ DISCORD_BOT_KEY="$(getSecret DISCORD_BOT_KEY)" \
 REDIS_HOST="$(getSecret REDIS_HOST)" \
 REDIS_PORT="$(getSecret REDIS_PORT)" \
 REDIS_PASS="$(getSecret REDIS_PASS)" \
-nohup java -jar /tmp/DuoCord-0.1.jar dev.rifaii.Main &
+nohup java -jar /tmp/DuoCord-0.1.jar dev.rifaii.Main > /dev/null 2> /dev/null < /dev/null &
