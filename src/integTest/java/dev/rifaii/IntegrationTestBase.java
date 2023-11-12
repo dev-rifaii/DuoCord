@@ -2,7 +2,7 @@ package dev.rifaii;
 
 import com.redis.testcontainers.RedisStackContainer;
 import dev.rifaii.user.User;
-import dev.rifaii.user.UserQueueDao;
+import dev.rifaii.user.UserQueueDaoRedis;
 import dev.rifaii.util.PropertyLoader;
 import org.testcontainers.containers.wait.strategy.Wait;
 
@@ -14,7 +14,7 @@ import static org.testcontainers.utility.DockerImageName.parse;
 public class IntegrationTestBase {
 
     private static final String REDIS_PASSWORD = "redis";
-    protected UserQueueDao userQueueDao = new UserQueueDao();
+    protected UserQueueDaoRedis userQueueDao = new UserQueueDaoRedis();
     private static final RedisStackContainer redisContainer = new RedisStackContainer(parse("redis/redis-stack:latest"))
             .withCommand("redis-stack-server", "--requirepass", REDIS_PASSWORD)
             .withExposedPorts(6379)

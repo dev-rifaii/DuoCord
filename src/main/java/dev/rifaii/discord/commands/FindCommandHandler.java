@@ -6,6 +6,8 @@ import dev.rifaii.user.User;
 import dev.rifaii.user.UserQueueService;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
+import java.util.Objects;
+
 import static dev.rifaii.discord.action.Button.buildExitButton;
 import static dev.rifaii.discord.action.Button.buildSkipButton;
 import static dev.rifaii.discord.commands.Command.FIND;
@@ -49,8 +51,8 @@ public class FindCommandHandler implements SlashCommandsHandler {
     }
 
     private MatchSearchDto inputToMatchSearchDto(SlashCommandInteractionEvent event) {
-        Short age = (short) event.getOption(AGE.getCode()).getAsInt();
-        var game = Activity.valueOf(event.getOption(GAME.getCode()).getAsString());
+        Short age = (short) Objects.requireNonNull(event.getOption(AGE.getText())).getAsInt();
+        var game = Activity.valueOf(Objects.requireNonNull(event.getOption(GAME.getText())).getAsString());
 
         return new MatchSearchDto()
                 .setUserDiscordId(event.getUser().getIdLong())

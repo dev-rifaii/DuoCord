@@ -7,10 +7,10 @@ import org.junit.jupiter.api.Test;
 import java.util.stream.LongStream;
 
 import static dev.rifaii.activity.Activity.OVERWATCH;
-import static dev.rifaii.user.UserQueueDao.ENQUEUED_USER_KEY_PREFIX;
+import static dev.rifaii.user.UserQueueDaoRedis.ENQUEUED_USER_KEY_PREFIX;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class UserQueueDaoITest extends IntegrationTestBase {
+public class UserQueueDaoRedisITest extends IntegrationTestBase {
 
     private final RedisClient redisClient = RedisClient.getInstance();
 

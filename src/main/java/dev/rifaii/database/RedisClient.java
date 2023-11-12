@@ -38,7 +38,6 @@ public class RedisClient {
             .registerModule(new JavaTimeModule());
     private static RedisClient instance;
 
-
     public static synchronized RedisClient getInstance() {
         if (instance == null) {
             instance = new RedisClient();
@@ -46,8 +45,8 @@ public class RedisClient {
         return instance;
     }
 
-    public void ping() {
-        client.ping();
+    public static void initialize() {
+        getInstance().ping();
     }
 
     public <T> void insertJson(String key, T object) {
@@ -150,5 +149,9 @@ public class RedisClient {
         stringBuilder.deleteCharAt(stringBuilder.length() - 1);
         stringBuilder.append("]");
         return stringBuilder.toString();
+    }
+
+    private void ping() {
+        client.ping();
     }
 }

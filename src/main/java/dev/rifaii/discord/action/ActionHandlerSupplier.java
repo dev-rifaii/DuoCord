@@ -7,13 +7,9 @@ import java.util.List;
 
 public class ActionHandlerSupplier {
 
-    private final UserQueueService userQueueService;
-
     private final List<ActionHandler> definedHandlers;
 
-
     public ActionHandlerSupplier(UserQueueService userQueueService) {
-        this.userQueueService = userQueueService;
         this.definedHandlers = new ArrayList<>();
         this.definedHandlers.add(new SkipButtonHandler(userQueueService));
         this.definedHandlers.add(new ExitButtonHandler(userQueueService));

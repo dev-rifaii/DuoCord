@@ -20,7 +20,7 @@ import static org.mockito.Mockito.verify;
 class UserQueueServiceTest {
 
     @Mock
-    private UserQueueDao userQueueDao;
+    private UserQueueDaoRedis userQueueDao;
 
     @InjectMocks
     private UserQueueService userQueueService;

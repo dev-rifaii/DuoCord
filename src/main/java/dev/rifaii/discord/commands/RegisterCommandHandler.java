@@ -12,6 +12,7 @@ import static dev.rifaii.discord.commands.Command.REGISTER;
 import static dev.rifaii.discord.commands.Option.*;
 import static dev.rifaii.util.Constant.ERROR_MESSAGE_REPLY;
 import static java.lang.String.format;
+import static java.util.Objects.requireNonNull;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -52,9 +53,9 @@ public class RegisterCommandHandler implements SlashCommandsHandler {
     }
 
     private User commandInputToUser(SlashCommandInteractionEvent event) {
-        final short age = (short) event.getOption(AGE.getCode()).getAsInt();
-        final String text = event.getOption(TEXT.getCode()).getAsString();
-        final Activity activity = Activity.valueOf(event.getOption(GAME.getCode()).getAsString());
+        final short age = (short) requireNonNull(event.getOption(AGE.getText())).getAsInt();
+        final String text = requireNonNull(event.getOption(TEXT.getText())).getAsString();
+        final Activity activity = Activity.valueOf(requireNonNull(event.getOption(GAME.getText())).getAsString());
         final String avatarUrl = event.getUser().getAvatarUrl();
         final String userHandle = event.getUser().getAsMention();
         final String username = event.getUser().getName();

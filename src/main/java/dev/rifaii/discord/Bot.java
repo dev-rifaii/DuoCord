@@ -2,7 +2,7 @@ package dev.rifaii.discord;
 
 import dev.rifaii.discord.action.ActionListener;
 import dev.rifaii.discord.commands.SlashCommandsListener;
-import dev.rifaii.user.UserQueueDao;
+import dev.rifaii.user.UserQueueDaoRedis;
 import dev.rifaii.user.UserQueueService;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -26,15 +26,15 @@ public class Bot {
 
     private static final String TOKEN = DISCORD_BOT_KEY;
 
-    private static final UserQueueService userQueueService = new UserQueueService(new UserQueueDao());
+    private static final UserQueueService userQueueService = new UserQueueService(new UserQueueDaoRedis());
 
     public static void initialize() {
         JDA jda = JDABuilder.createDefault(TOKEN)
-                .setStatus(OnlineStatus.ONLINE)
-                .addEventListeners(new SlashCommandsListener(userQueueService))
-                .addEventListeners(new ActionListener(userQueueService))
-                .setEventPassthrough(true)
-                .build();
+                            .setStatus(OnlineStatus.ONLINE)
+                            .addEventListeners(new SlashCommandsListener(userQueueService))
+                            .addEventListeners(new ActionListener(userQueueService))
+                            .setEventPassthrough(true)
+                            .build();
 
         jda.updateCommands().addCommands(
                 List.of(
@@ -47,23 +47,23 @@ public class Bot {
     @NotNull
     private static SlashCommandData registerCommand() {
         return Commands.slash(REGISTER.getDisplayableName(), "Enter queue")
-                .addOption(OptionType.INTEGER, AGE.getCode(), "your age", true)
-                .addOption(OptionType.STRING, TEXT.getCode(), "something to say", true)
-                .addOptions(playableActivitiesOptions());
+                       .addOption(OptionType.INTEGER, AGE.getText(), "your age", true)
+                       .addOption(OptionType.STRING, TEXT.getText(), "something to say", true)
+                       .addOptions(playableActivitiesOptions());
     }
 
     private static SlashCommandData findCommand() {
         return Commands.slash(FIND.getDisplayableName(), "find")
-                .addOption(OptionType.INTEGER, AGE.getCode(), "your age", true)
-                .addOptions(playableActivitiesOptions());
+                       .addOption(OptionType.INTEGER, AGE.getText(), "your age", true)
+                       .addOptions(playableActivitiesOptions());
     }
 
     private static OptionData playableActivitiesOptions() {
-        return new OptionData(OptionType.STRING, GAME.getCode(), "Desired game", true)
+        return new OptionData(OptionType.STRING, GAME.getText(), "Desired game", true)
                 .addChoices(
                         PLAYABLE_ACTIVITIES.stream()
-                                .map(game -> new Command.Choice(game.getTitleName(), game.name()))
-                                .toList()
+                                           .map(game -> new Command.Choice(game.getTitleName(), game.name()))
+                                           .toList()
                 );
     }
 }

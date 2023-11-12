@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class UserQueueServiceITest extends IntegrationTestBase {
 
-    private final UserQueueService userQueueService = new UserQueueService(new UserQueueDao());
+    private final UserQueueService userQueueService = new UserQueueService(new UserQueueDaoRedis());
 
     @Test
     public void findMatchForUser_DoesNotReturnAlreadyMatchedUser() {

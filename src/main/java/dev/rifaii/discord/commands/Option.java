@@ -10,10 +10,10 @@ public enum Option {
     GAME("game"),
     ACTIVITY("activity");
 
-    private final String code;
+    private final String text;
 
-    Option(String code) {
-        this.code = code;
+    Option(String text) {
+        this.text = text;
     }
 
 }
