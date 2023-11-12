@@ -48,7 +48,7 @@ public class Bot {
     private static SlashCommandData registerCommand() {
         return Commands.slash(REGISTER.getDisplayableName(), "Enter queue")
                        .addOption(OptionType.INTEGER, AGE.getText(), "your age", true)
-                       .addOption(OptionType.STRING, TEXT.getText(), "something to say", true)
+                       .addOption(OptionType.STRING, NOTE.getText(), "leave a note", true)
                        .addOptions(playableActivitiesOptions());
     }
 

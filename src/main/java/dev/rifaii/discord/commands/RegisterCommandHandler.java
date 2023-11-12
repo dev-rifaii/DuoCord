@@ -54,7 +54,7 @@ public class RegisterCommandHandler implements SlashCommandsHandler {
 
     private User commandInputToUser(SlashCommandInteractionEvent event) {
         final short age = (short) requireNonNull(event.getOption(AGE.getText())).getAsInt();
-        final String text = requireNonNull(event.getOption(TEXT.getText())).getAsString();
+        final String text = requireNonNull(event.getOption(NOTE.getText())).getAsString();
         final Activity activity = Activity.valueOf(requireNonNull(event.getOption(GAME.getText())).getAsString());
         final String avatarUrl = event.getUser().getAvatarUrl();
         final String userHandle = event.getUser().getAsMention();
@@ -74,7 +74,7 @@ public class RegisterCommandHandler implements SlashCommandsHandler {
 
     private void logErrorAndSendMessage(Exception e, SlashCommandInteractionEvent event) {
         log.error(e.getMessage());
-        event.reply(ERROR_MESSAGE_REPLY)
+        event.reply(e instanceof ValidationException ? e.getMessage() : ERROR_MESSAGE_REPLY)
              .queue();
     }
 

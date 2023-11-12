@@ -6,7 +6,7 @@ import lombok.Getter;
 public enum Option {
 
     AGE("age"),
-    TEXT("text"),
+    NOTE("note"),
     GAME("game"),
     ACTIVITY("activity");
 
